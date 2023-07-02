@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Article from "@/types/article";
 import ArticleList from "@/components/ArticleList";
 import ArticleSearchBar from "@/components/ArticleSearchBar";
+import ArticlePanel from "@/components/ArticlePanel";
 
 const Articles = () => {
   const searchParams = useSearchParams();
@@ -12,6 +13,7 @@ const Articles = () => {
 
   const [articleIds, setArticleIds] = useState<string[]>([]);
   const [articles, setArticles] = useState<Article[]>([]);
+  const [selectedArticle, setSelectedArticle] = useState<Article>();
 
   console.log(articles);
 
@@ -86,10 +88,20 @@ const Articles = () => {
   }, [articleIds]);
 
   return (
-    <section>
-        <ArticleSearchBar />
-        <ArticleList articles={articles} />
-    </section>
+    <>
+      <ArticleSearchBar />
+      <div className="grid grid-cols-3 gap-4 mt-3">
+        <aside>
+          <ArticleList
+            articles={articles}
+            selectArticle={(article) => setSelectedArticle(article)}
+          />
+        </aside>
+        <section className="col-span-2 border-l-2 border-gray-500">
+          <ArticlePanel article={selectedArticle} />
+        </section>
+      </div>
+    </>
   );
 };
 
