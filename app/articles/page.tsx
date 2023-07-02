@@ -6,6 +6,8 @@ import { useSearchParams } from "next/navigation";
 type Article = {
   id: string;
   date: Date;
+  title: string;
+  abstract: string;
   passages: [];
 };
 
@@ -46,16 +48,26 @@ const Articles = () => {
           `https://www.ncbi.nlm.nih.gov/research/bionlp/RESTful/pmcoa.cgi/BioC_json/${articleId}/unicode`
         );
 
-        if (response.ok) {
-          const data = await response.json();
-          return {
-            id: articleId,
-            date: data.date,
-            passages: data.documents[0].passages,
-          };
-        } else {
+        if (!response.ok) {
           return null;
         }
+
+        const data = await response.json();
+        const date = new Date(
+          `${data.date.slice(0, 4)}-${data.date.slice(4, 6)}-${data.date.slice(
+            6,
+            8
+          )}`
+        );
+        const passages = data.documents[0].passages;
+
+        return {
+          id: articleId,
+          date,
+          title: passages[0].text,
+          abstract: passages[1].text,
+          passages: passages.slice(2),
+        };
       } catch (error) {
         console.error(error);
         return null;
@@ -65,7 +77,7 @@ const Articles = () => {
     const fetchArticles = async () => {
       const newArticles: Article[] = [];
       await Promise.all(
-        articleIds.slice(0, 10).map(async (articleId) => {
+        articleIds.map(async (articleId) => {
           const article = await fetchArticle(articleId);
           if (article) {
             newArticles.push(article);
