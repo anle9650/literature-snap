@@ -1,13 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-type Props = {
-  handleSearch: (searchTerm: string) => void;
-};
-
-const SearchBar = ({ handleSearch }: Props) => {
+const ArticleSearchBar = () => {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState<string>("");
+
+  const handleSearch = () => {
+    router.push(`/articles?term=${searchTerm.trim()}`);
+  };
+
 
   return (
     <div className="flex items-center">
@@ -43,7 +46,7 @@ const SearchBar = ({ handleSearch }: Props) => {
       <button
         type="button"
         className="p-2.5 ml-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        onClick={() => handleSearch(searchTerm)}
+        onClick={handleSearch}
       >
         <svg
           className="w-5 h-5"
@@ -65,4 +68,4 @@ const SearchBar = ({ handleSearch }: Props) => {
   );
 };
 
-export default SearchBar;
+export default ArticleSearchBar;

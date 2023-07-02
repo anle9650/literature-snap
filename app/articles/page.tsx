@@ -2,14 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-
-type Article = {
-  id: string;
-  date: Date;
-  title: string;
-  abstract: string;
-  passages: [];
-};
+import Article from "@/types/article";
+import ArticleList from "@/components/ArticleList";
+import ArticleSearchBar from "@/components/ArticleSearchBar";
 
 const Articles = () => {
   const searchParams = useSearchParams();
@@ -90,7 +85,12 @@ const Articles = () => {
     fetchArticles();
   }, [articleIds]);
 
-  return <div>Articles</div>;
+  return (
+    <section>
+        <ArticleSearchBar />
+        <ArticleList articles={articles} />
+    </section>
+  );
 };
 
 export default Articles;
