@@ -40,7 +40,7 @@ const Articles = () => {
   }, []);
 
   useEffect(() => {
-    const fetchArticle = async (articleId: string) => {
+    const fetchArticle = async (articleId: string): Promise<Article | null> => {
       try {
         const response = await fetch(
           `https://www.ncbi.nlm.nih.gov/research/bionlp/RESTful/pmcoa.cgi/BioC_json/${articleId}/unicode`
@@ -53,6 +53,8 @@ const Articles = () => {
             date: data.date,
             passages: data.documents[0].passages,
           };
+        } else {
+          return null;
         }
       } catch (error) {
         console.error(error);
