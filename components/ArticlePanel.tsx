@@ -1,4 +1,3 @@
-import Article from "@/types/article";
 import Passage from "@/types/passage";
 
 const ArticleSection = ({ passage }: { passage: Passage }) => {
@@ -15,13 +14,13 @@ const ArticleSection = ({ passage }: { passage: Passage }) => {
   );
 };
 
-const ArticlePanel = ({ article }: { article: Article }) => {
+const ArticlePanel = ({ passages }: { passages: Passage[] }) => {
   return (
     <div
       className="overflow-scroll p-6"
       style={{ maxHeight: "calc(100vh - 190px)" }}
     >
-      {article.passages.map((passage) => (
+      {passages.map((passage) => (
         <ArticleSection passage={passage} />
       ))}
     </div>
