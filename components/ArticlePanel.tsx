@@ -2,13 +2,15 @@ import Passage from "@/types/passage";
 
 const ArticleSection = ({ passage }: { passage: Passage }) => {
   return passage.infons.section_type === "TITLE" ? (
-    <h2 className="font-semibold text-xl">{passage.text}</h2>
+    <h2 className="font-semibold text-xl" key={`passage${passage.offset}`}>
+      {passage.text}
+    </h2>
   ) : passage.infons.type.includes("title") ? (
-    <h3 className="font-semibold text-lg mt-4" key={passage.offset}>
+    <h3 className="font-semibold text-lg mt-4" key={`passage${passage.offset}`}>
       {passage.text}
     </h3>
   ) : (
-    <p className="mt-3" key={passage.offset}>
+    <p className="mt-3" key={`passage${passage.offset}`}>
       {passage.text}
     </p>
   );
