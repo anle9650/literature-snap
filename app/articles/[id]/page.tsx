@@ -15,7 +15,7 @@ const ArticlePage = ({ params }: Props) => {
   const [bulletPoints, setBulletPoints] = useState<string[]>([]);
   const [isSummarizing, setIsSummarizing] = useState<boolean>(false);
 
-  const discussion: string | undefined = article?.passages
+  const discussion = article?.passages
     .filter((passage) => passage.infons.section_type === "DISCUSS")
     .map((passage) => passage.text)
     .join("/n");
@@ -23,9 +23,7 @@ const ArticlePage = ({ params }: Props) => {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const response = await fetch(
-          `/api/articles/${params.id}`
-        );
+        const response = await fetch(`/api/articles/${params.id}`);
 
         if (!response.ok) {
           return null;

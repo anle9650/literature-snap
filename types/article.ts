@@ -1,11 +1,4 @@
-type Passage = {
-    offset: number;
-    infons: {
-        section_type: string;
-        type: string;
-    };
-    text: string;
-}
+import Passage from "./passage";
 
 type Article = {
     id: string;

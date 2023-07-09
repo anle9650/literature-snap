@@ -5,6 +5,7 @@ type Props = {
 };
 
 const ArticlePanel = ({ article }: Props) => {
+  console.log(article)
   return (
     <>
       {article && (
@@ -12,13 +13,14 @@ const ArticlePanel = ({ article }: Props) => {
           className="overflow-scroll p-6"
           style={{ maxHeight: "calc(100vh - 190px)" }}
         >
-          <h2 className="font-semibold text-lg">Abstract</h2>
-          <p className="mt-3">{article.abstract}</p>
           {article.passages.map((passage) =>
+            passage.infons.section_type === 'TITLE' ? (
+                <h2 className="font-semibold text-xl">{passage.text}</h2>
+            ) :
             passage.infons.type.includes("title") ? (
-              <h2 className="font-semibold text-lg mt-4" key={passage.offset}>
+              <h3 className="font-semibold text-lg mt-4" key={passage.offset}>
                 {passage.text}
-              </h2>
+              </h3>
             ) : (
               <p className="mt-3" key={passage.offset}>
                 {passage.text}

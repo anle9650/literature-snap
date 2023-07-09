@@ -1,3 +1,4 @@
+import { fetchArticle } from "@/app/services/articles";
 import Article from "@/types/article";
 import { NextRequest } from "next/server";
 
@@ -33,35 +34,4 @@ async function fetchArticles(articleIds: string[]): Promise<Article[]> {
   );
 
   return articles;
-}
-
-async function fetchArticle(articleId: string): Promise<Article | null> {
-  try {
-    const response = await fetch(
-      `https://www.ncbi.nlm.nih.gov/research/bionlp/RESTful/pmcoa.cgi/BioC_json/${articleId}/unicode`
-    );
-
-    if (!response.ok) {
-      return null;
-    }
-
-    const data = await response.json();
-    const date = new Date(
-      `${data.date.slice(0, 4)}-${data.date.slice(4, 6)}-${data.date.slice(
-        6,
-        8
-      )}`
-    );
-    const passages = data.documents[0].passages;
-
-    return {
-      id: articleId,
-      date,
-      title: passages[0].text,
-      abstract: passages[1].text,
-      passages: passages.slice(2),
-    };
-  } catch (error) {
-    return null;
-  }
 }
