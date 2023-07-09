@@ -77,7 +77,7 @@ const ArticlePage = ({ params }: Props) => {
       </ul>
       <div className="grid grid-cols-3 gap-4 mt-3">
         <section className="col-span-2">
-          <ArticlePanel article={article} />
+          {article && <ArticlePanel article={article} />}
         </section>
         {isSummarizing && (
           <section className="border-l-2 border-gray-500">
