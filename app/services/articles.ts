@@ -36,3 +36,18 @@ export async function fetchArticle(articleId: string): Promise<Article | null> {
     return null;
   }
 }
+
+export async function fetchArticles(articleIds: string[]): Promise<Article[]> {
+  const articles: Article[] = [];
+
+  await Promise.all(
+    articleIds.map(async (articleId) => {
+      const article = await fetchArticle(articleId);
+      if (article) {
+        articles.push(article);
+      }
+    })
+  );
+
+  return articles;
+}

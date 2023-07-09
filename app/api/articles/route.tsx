@@ -1,4 +1,4 @@
-import { fetchArticle } from "@/app/services/articles";
+import { fetchArticles } from "@/app/services/articles";
 import Article from "@/types/article";
 import { NextRequest } from "next/server";
 
@@ -20,18 +20,3 @@ export const GET = async (req: NextRequest) => {
     return new Response("Failed to fetch articles", { status: 500 });
   }
 };
-
-async function fetchArticles(articleIds: string[]): Promise<Article[]> {
-  const articles: Article[] = [];
-
-  await Promise.all(
-    articleIds.map(async (articleId) => {
-      const article = await fetchArticle(articleId);
-      if (article) {
-        articles.push(article);
-      }
-    })
-  );
-
-  return articles;
-}
