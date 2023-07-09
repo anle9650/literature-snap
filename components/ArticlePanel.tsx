@@ -5,7 +5,6 @@ type Props = {
 };
 
 const ArticlePanel = ({ article }: Props) => {
-  console.log(article)
   return (
     <>
       {article && (
