@@ -21,40 +21,23 @@ const ArticlePanel = ({ article }: Props) => {
   }, [article]);
 
   const summarize = async () => {
-    const options = {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.CHAT_GPT_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "gpt-3.5-turbo",
-        messages: [
-          {
-            role: "user",
-            content: `Give me the main bullet points from the following passages:/n${article?.abstract}/n${discussion}`,
-          },
-        ],
-        max_tokens: 1000,
-      }),
-    };
+    try {
+      const response = await fetch("/api/article/summarize", {
+        method: "POST",
+        body: JSON.stringify({
+          content: `${article?.abstract}/n${discussion}`,
+        }),
+      });
 
-    const response = await fetch(
-      "https://api.openai.com/v1/chat/completions",
-      options
-    );
-
-    if (response.ok) {
-      const data = await response.json();
-      const content = data.choices[0].message.content;
-      setBulletPoints(content.split("- ").slice(1));
+      if (response.ok) {
+        const bulletPoints = await response.json();
+        setBulletPoints(bulletPoints);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSummarizing(true);
     }
-
-    // const content =
-    //   "- Mutations in BRCA1 or BRCA2 genes increase the risk of breast and ovarian cancer - Treatment for these cancers involves PARP inhibitors - Inhibition of DNPH1 increases sensitivity of BRCA-deficient cells to PARP inhibitors - DNPH1 inhibition leads to replication fork collapse, DNA break formation, and apoptosis - Targeting DNPH1 may enhance the effectiveness of PARP inhibitor therapy for BRCA-deficient cancers - Cells eliminate epigenetically modified nucleotides through a two-step process involving DCTD and DNPH1 - Genomic hmdU predominantly arises through deamination of hmdCMP by DCTD - Cancers with high levels of hmdC and/or expression of CDA or DCTD may depend on DNPH1 for survival - Loss of ITPA also sensitizes cells to PARP inhibitors - Synthetic lethality following exposure to hmdU involves replication fork collapse, DSB formation, and apoptotic cell death - Loss of either PARP1 or the 53BP1-SHIELDIN pathway leads to cell death when exposed to hmdU - DNPH1 inhibition sensitizes BRCA-deficient cancer cells to PARP inhibitors and hmdU treatment - DNPH1 should be investigated as a potential druggable target";
-    // setBulletPoints(content.split("- ").slice(1));
-
-    setIsSummarizing(true);
   };
 
   return (
@@ -72,7 +55,10 @@ const ArticlePanel = ({ article }: Props) => {
       </ul>
 
       {isSummarizing ? (
-        <ul className="list-disc leading-loose p-6">
+        <ul
+          className="list-disc leading-loose overflow-scroll p-6"
+          style={{ maxHeight: "calc(100vh - 230px)" }}
+        >
           {bulletPoints.map((bulletPoint, index) => (
             <li key={`bulletPoint${index}`}>{bulletPoint}</li>
           ))}
