@@ -24,29 +24,15 @@ const ArticlePage = ({ params }: Props) => {
     const fetchArticle = async () => {
       try {
         const response = await fetch(
-          `https://www.ncbi.nlm.nih.gov/research/bionlp/RESTful/pmcoa.cgi/BioC_json/${params.id}/unicode`
+          `/api/articles/${params.id}`
         );
 
         if (!response.ok) {
           return null;
         }
 
-        const data = await response.json();
-        const date = new Date(
-          `${data.date.slice(0, 4)}-${data.date.slice(4, 6)}-${data.date.slice(
-            6,
-            8
-          )}`
-        );
-        const passages = data.documents[0].passages;
-
-        setArticle({
-          id: params.id,
-          date,
-          title: passages[0].text,
-          abstract: passages[1].text,
-          passages: passages.slice(2),
-        });
+        const article = await response.json();
+        setArticle(article);
       } catch (error) {
         console.error(error);
         return null;
@@ -60,7 +46,7 @@ const ArticlePage = ({ params }: Props) => {
 
   const summarize = async () => {
     try {
-      const response = await fetch("/api/article/summarize", {
+      const response = await fetch("/api/articles/summarize", {
         method: "POST",
         body: JSON.stringify({
           content: `${article?.abstract}/n${discussion}`,

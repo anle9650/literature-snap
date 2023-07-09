@@ -12,29 +12,15 @@ export default function Home() {
   const fetchArticle = async (articleId: string): Promise<Article | null> => {
     try {
       const response = await fetch(
-        `https://www.ncbi.nlm.nih.gov/research/bionlp/RESTful/pmcoa.cgi/BioC_json/${articleId}/unicode`
+        `/api/articles/${articleId}`
       );
 
       if (!response.ok) {
         return null;
       }
 
-      const data = await response.json();
-      const date = new Date(
-        `${data.date.slice(0, 4)}-${data.date.slice(4, 6)}-${data.date.slice(
-          6,
-          8
-        )}`
-      );
-      const passages = data.documents[0].passages;
-
-      return {
-        id: articleId,
-        date,
-        title: passages[0].text,
-        abstract: passages[1].text,
-        passages: passages.slice(2),
-      };
+      const article = await response.json();
+      return article;
     } catch (error) {
       console.error(error);
       return null;

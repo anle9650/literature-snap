@@ -34,12 +34,10 @@ export const POST = async (req: Request) => {
       options
     );
 
-    if (response.ok) {
-      const data = await response.json();
-      const content = data.choices[0].message.content;
-      const bulletPoints = content.split("- ").slice(1);
-      return new Response(JSON.stringify(bulletPoints), { status: 200 });
-    }
+    const data = await response.json();
+    const content = data.choices[0].message.content;
+    const bulletPoints = content.split("- ").slice(1);
+    return new Response(JSON.stringify(bulletPoints), { status: 200 });
   } catch (error) {
     return new Response("Failed to summarize article", { status: 500 });
   }
