@@ -10,6 +10,10 @@ export const GET = async (req: Request, { params }: { params: Params }) => {
       `https://www.ncbi.nlm.nih.gov/research/bionlp/RESTful/pmcoa.cgi/BioC_json/${params.id}/unicode`
     );
 
+    if (!response.ok) {
+      return new Response("Failed to fetch article", { status: 500 });
+    }
+
     const data = await response.json();
     const date = new Date(
       `${data.date.slice(0, 4)}-${data.date.slice(4, 6)}-${data.date.slice(

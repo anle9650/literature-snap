@@ -9,47 +9,15 @@ import SearchBar from "@/components/SearchBar";
 export default function Home() {
   const [articles, setArticles] = useState<Article[]>([]);
 
-  const fetchArticle = async (articleId: string): Promise<Article | null> => {
-    try {
-      const response = await fetch(
-        `/api/articles/${articleId}`
-      );
-
-      if (!response.ok) {
-        return null;
-      }
-
-      const article = await response.json();
-      return article;
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-  };
-
-  const fetchArticles = async (articleIds: string[]) => {
-    const newArticles: Article[] = [];
-    await Promise.all(
-      articleIds.map(async (articleId) => {
-        const article = await fetchArticle(articleId);
-        if (article) {
-          newArticles.push(article);
-        }
-      })
-    );
-    setArticles(newArticles);
-  };
-
   const handleSearch = async (searchTerm: string) => {
     try {
       const response = await fetch(
-        `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&format=json&term=science%5bjournal%5d+AND+${searchTerm}`
+        `/api/articles?term=${searchTerm}`
       );
 
       if (response.ok) {
-        const data = await response.json();
-        const articleIds = data.esearchresult.idlist;
-        fetchArticles(articleIds);
+        const articles = await response.json();
+        setArticles(articles);
       }
     } catch (error) {
       console.error(error);
