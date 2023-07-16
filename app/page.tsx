@@ -8,12 +8,13 @@ import SearchBar from "@/components/SearchBar";
 
 export default function Home() {
   const [articles, setArticles] = useState<Article[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSearch = async (searchTerm: string) => {
+    setIsLoading(true);
+
     try {
-      const response = await fetch(
-        `/api/articles?term=${searchTerm}`
-      );
+      const response = await fetch(`/api/articles?term=${searchTerm}`);
 
       if (response.ok) {
         const articles = await response.json();
@@ -21,12 +22,14 @@ export default function Home() {
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <section className="p-12">
-      <SearchBar handleSearch={handleSearch} />
+      <SearchBar handleSearch={handleSearch} isLoading={isLoading} />
 
       {articles.map((article) => (
         <Link
