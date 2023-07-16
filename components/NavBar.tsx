@@ -1,16 +1,42 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
+import {
+  signIn,
+  signOut,
+  useSession,
+  getProviders,
+  LiteralUnion,
+  ClientSafeProvider,
+} from "next-auth/react";
+import { BuiltInProviderType } from "next-auth/providers";
 
 const NavBar = () => {
+  const { data: session } = useSession();
   const pathname = usePathname();
+
+  const [providers, setProviders] = useState<Record<
+    LiteralUnion<BuiltInProviderType, string>,
+    ClientSafeProvider
+  > | null>(null);
+
   const activeClass = "md:text-blue-700 md:p-0 md:dark:text-blue-500";
+
+  useEffect(() => {
+    const setupProviders = async () => {
+      const response = await getProviders();
+      setProviders(response);
+    };
+    setupProviders();
+  }, []);
 
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <Link href="/" className="flex items-center">
+      <div className="max-w-screen-xl flex flex-wrap items-center mx-auto p-4">
+        <Link href="/" className="flex items-center me-auto">
           <img
             src="https://flowbite.com/docs/images/logo.svg"
             className="h-8 mr-3"
@@ -58,34 +84,58 @@ const NavBar = () => {
                 Home
               </Link>
             </li>
-            <li>
-              <Link
-                href="/articles"
-                className={`block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent ${
-                  pathname === "/articles" ? activeClass : ""
-                }`}
-              >
-                Saved Articles
-              </Link>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-              >
-                Pricing
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-              >
-                Contact
-              </a>
-            </li>
+            {session?.user ? (
+              <>
+                <li>
+                  <Link
+                    href="/articles"
+                    className={`block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent ${
+                      pathname === "/articles" ? activeClass : ""
+                    }`}
+                  >
+                    Saved Articles
+                  </Link>
+                </li>
+
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => signOut()}
+                    className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                  >
+                    Sign Out
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                {providers &&
+                  Object.values(providers).map((provider) => (
+                    <button
+                      type="button"
+                      key={provider.name}
+                      onClick={() => signIn(provider.id)}
+                      className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                    >
+                      Sign In
+                    </button>
+                  ))}
+              </>
+            )}
           </ul>
         </div>
+
+        {session?.user && (
+          <Link href="/articles" className="ms-3">
+            <Image
+              src={session.user.image ?? ""}
+              width={37}
+              height={37}
+              className="rounded-full"
+              alt="profile"
+            ></Image>
+          </Link>
+      )}
       </div>
     </nav>
   );
