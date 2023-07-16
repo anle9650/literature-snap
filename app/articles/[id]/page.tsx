@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import Article from "@/types/article";
 import ArticlePanel from "@/components/ArticlePanel";
+import { inherits } from "util";
+import Spinner from "@/components/Spinner";
 
 type Props = {
   params: {
@@ -13,7 +15,8 @@ type Props = {
 const ArticlePage = ({ params }: Props) => {
   const [article, setArticle] = useState<Article>();
   const [bulletPoints, setBulletPoints] = useState<string[]>([]);
-  const [isSummarizing, setIsSummarizing] = useState<boolean>(false);
+  const [isSummarizing, setIsSummarizing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const discussion = article?.passages
     .filter((passage) => passage.infons.section_type === "DISCUSS")
@@ -43,6 +46,9 @@ const ArticlePage = ({ params }: Props) => {
   }, []);
 
   const summarize = async () => {
+    setIsSummarizing(true);
+    setIsLoading(true);
+
     try {
       const response = await fetch("/api/articles/summarize", {
         method: "POST",
@@ -58,7 +64,7 @@ const ArticlePage = ({ params }: Props) => {
     } catch (error) {
       console.log(error);
     } finally {
-      setIsSummarizing(true);
+      setIsLoading(false);
     }
   };
 
@@ -76,19 +82,27 @@ const ArticlePage = ({ params }: Props) => {
         </li>
       </ul>
       <div className="grid grid-cols-3 gap-4 mt-3">
-        <section className="col-span-2">
+        <section className={isSummarizing ? "col-span-2" : "col-span-3"}>
           {article && <ArticlePanel passages={article.passages} />}
         </section>
+
         {isSummarizing && (
-          <section className="border-l-2 border-gray-500">
-            <ul
-              className="list-disc leading-loose overflow-scroll px-12 py-6"
-              style={{ maxHeight: "calc(100vh - 190px)" }}
-            >
-              {bulletPoints.map((bulletPoint, index) => (
-                <li key={`bulletPoint${index}`}>{bulletPoint}</li>
-              ))}
-            </ul>
+          <section
+            className="flex flex-col border-l-2 border-gray-500"
+            style={{ height: "calc(100vh - 190px)" }}
+          >
+            {isLoading ? (
+              <Spinner className="self-center my-auto" />
+            ) : (
+              <ul
+                className="list-disc leading-loose overflow-scroll px-12 py-6"
+                style={{ height: "inherit" }}
+              >
+                {bulletPoints.map((bulletPoint, index) => (
+                  <li key={`bulletPoint${index}`}>{bulletPoint}</li>
+                ))}
+              </ul>
+            )}
           </section>
         )}
       </div>
