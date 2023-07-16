@@ -24,7 +24,6 @@ const NavBar = () => {
   > | null>(null);
 
   const [openDropdown, setOpenDropdown] = useState(false);
-
   const activeClass = "md:text-blue-700 md:p-0 md:dark:text-blue-500";
 
   useEffect(() => {
