@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Article from "@/types/article";
 import ArticlePanel from "@/components/ArticlePanel";
-import { inherits } from "util";
 import Spinner from "@/components/Spinner";
 
 type Props = {
