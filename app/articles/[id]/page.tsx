@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Article from "@/types/article";
 import ArticlePanel from "@/components/ArticlePanel";
 import Spinner from "@/components/Spinner";
+import Link from "next/link";
 
 type Props = {
   params: {
@@ -69,8 +70,16 @@ const ArticlePage = ({ params }: Props) => {
 
   return (
     <>
-      <ul className="flex justify-end p-3">
+      <ul className="flex items-center p-3">
         <li>
+          <Link
+            href="/"
+            className="font-semibold text-gray-900 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:text-white"
+          >
+            Back to search
+          </Link>
+        </li>
+        <li className="ms-auto">
           <button
             className="inline-block border border-blue-500 rounded py-1 px-3 bg-blue-500 text-white"
             disabled={!article}
@@ -80,6 +89,7 @@ const ArticlePage = ({ params }: Props) => {
           </button>
         </li>
       </ul>
+
       <div className="grid grid-cols-3 gap-4 mt-3">
         <section className={isSummarizing ? "col-span-2" : "col-span-3"}>
           {article && <ArticlePanel passages={article.passages} />}

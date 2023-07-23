@@ -1,4 +1,4 @@
-import { fetchArticle } from "@/app/services/articles";
+import { fetchArticle } from "@/utils/articles";
 
 type Params = {
   id: string;

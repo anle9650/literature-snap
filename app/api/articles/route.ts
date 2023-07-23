@@ -1,4 +1,4 @@
-import { fetchArticles } from "@/app/services/articles";
+import { fetchArticles } from "@/utils/articles";
 import Article from "@/types/article";
 import { NextRequest } from "next/server";
 
