@@ -17,7 +17,7 @@ const UserSchema = new Schema({
     image: {
         type: String,
     },
-    articles: {
+    articleIds: {
         type: Array<String>,
     }
 });
