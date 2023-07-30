@@ -6,6 +6,7 @@ type Article = {
     title: string;
     abstract: string;
     passages: Passage[];
+    saved?: boolean;
 };
 
 export default Article;

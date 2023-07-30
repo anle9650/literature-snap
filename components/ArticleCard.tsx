@@ -6,6 +6,12 @@ import Article from "@/types/article";
 const ArticleCard = ({ article }: { article: Article }) => {
   const { data: session } = useSession();
 
+  const saveButtonClass = `border hover:bg-green-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:hover:text-white dark:focus:ring-green-800 dark:hover:bg-green-500 mb-3 ml-auto ${
+    article.saved
+      ? "bg-green-700 text-white dark:text-white dark:bg-green-500"
+      : "text-green-700 border-green-700 dark:border-green-500 dark:text-green-500"
+  }`;
+
   const saveArticle = async () => {
     try {
       const response = await fetch(`/api/users/${session?.user?.id}/articles`, {
@@ -28,31 +34,17 @@ const ArticleCard = ({ article }: { article: Article }) => {
       <div className="flex">
         <button
           type="button"
-          title="Save Article"
-          className="p-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mb-3 ml-auto"
+          className={saveButtonClass}
           onClick={saveArticle}
         >
           <svg
-            className="w-5 h-5"
-            fill="#FFFFFF"
+            className="w-4 h-4"
+            aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
-            viewBox="0 0 349.03 349.031"
-            xmlSpace="preserve"
+            fill="currentColor"
+            viewBox="0 0 18 18"
           >
-            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-            <g
-              id="SVGRepo_tracerCarrier"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            ></g>
-            <g id="SVGRepo_iconCarrier">
-              {" "}
-              <g>
-                {" "}
-                <path d="M349.03,141.226v66.579c0,5.012-4.061,9.079-9.079,9.079H216.884v123.067c0,5.019-4.067,9.079-9.079,9.079h-66.579 c-5.009,0-9.079-4.061-9.079-9.079V216.884H9.079c-5.016,0-9.079-4.067-9.079-9.079v-66.579c0-5.013,4.063-9.079,9.079-9.079 h123.068V9.079c0-5.018,4.069-9.079,9.079-9.079h66.579c5.012,0,9.079,4.061,9.079,9.079v123.068h123.067 C344.97,132.147,349.03,136.213,349.03,141.226z"></path>{" "}
-              </g>{" "}
-            </g>
+            <path d="M3 7H1a1 1 0 0 0-1 1v8a2 2 0 0 0 4 0V8a1 1 0 0 0-1-1Zm12.954 0H12l1.558-4.5a1.778 1.778 0 0 0-3.331-1.06A24.859 24.859 0 0 1 6 6.8v9.586h.114C8.223 16.969 11.015 18 13.6 18c1.4 0 1.592-.526 1.88-1.317l2.354-7A2 2 0 0 0 15.954 7Z" />
           </svg>
           <span className="sr-only">Save Article</span>
         </button>

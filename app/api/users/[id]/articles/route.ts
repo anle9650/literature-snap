@@ -16,7 +16,7 @@ export const GET = async (req: Request, { params }: { params: Params }) => {
             return new Response("User not found", { status: 404 });
         }
 
-        const articles = await fetchArticles(user.articleIds);
+        const articles = await fetchArticles(user.articleIds, params.id);
         return new Response(JSON.stringify(articles), { status: 200 });
     } catch (error) {
         console.log(error);

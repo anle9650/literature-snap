@@ -1,5 +1,7 @@
 import Article from "@/types/article";
 import Passage from "@/types/passage";
+import { connectToDB } from "@/utils/database";
+import User from "@/models/user";
 
 export async function fetchArticle(articleId: string): Promise<Article | null> {
   try {
@@ -37,7 +39,7 @@ export async function fetchArticle(articleId: string): Promise<Article | null> {
   }
 }
 
-export async function fetchArticles(articleIds: string[]): Promise<Article[]> {
+export async function fetchArticles(articleIds: string[], userId?: string): Promise<Article[]> {
   const articles: Article[] = [];
 
   await Promise.all(
@@ -48,6 +50,15 @@ export async function fetchArticles(articleIds: string[]): Promise<Article[]> {
       }
     })
   );
+
+  if (userId) {
+    await connectToDB();
+    const user = await User.findById(userId);
+
+    articles.forEach(article => {
+      article.saved = user.articleIds.includes(article.id)
+    })
+  }
 
   return articles;
 }
