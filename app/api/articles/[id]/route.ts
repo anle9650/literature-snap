@@ -10,5 +10,6 @@ export const GET = async (req: Request, { params }: { params: Params }) => {
   if (article) {
     return new Response(JSON.stringify(article), { status: 200 });
   }
+
   return new Response("Failed to fetch article", { status: 500 });
 };

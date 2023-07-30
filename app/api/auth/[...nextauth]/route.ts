@@ -16,7 +16,11 @@ const handler = NextAuth({
       const sessionUser = await User.findOne({
         email: session.user?.email,
       });
-      session.user.id = sessionUser._id.toString();
+
+      if (session.user) {
+        session.user.id = sessionUser._id.toString();
+      }
+      
       return session;
     },
     async signIn({ profile }) {
