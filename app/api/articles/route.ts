@@ -1,5 +1,4 @@
 import { fetchArticles } from "@/utils/articles";
-import Article from "@/types/article";
 import { NextRequest } from "next/server";
 
 export const GET = async (req: NextRequest) => {
@@ -13,7 +12,7 @@ export const GET = async (req: NextRequest) => {
 
     const data = await response.json();
     const articleIds = data.esearchresult.idlist;
-    const articles: Article[] = await fetchArticles(articleIds);
+    const articles = await fetchArticles(articleIds);
 
     return new Response(JSON.stringify(articles), { status: 200 });
   } catch (error) {

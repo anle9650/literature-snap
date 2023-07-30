@@ -1,0 +1,54 @@
+"use client";
+
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+
+import Article from "@/types/article";
+import ArticleCard from "@/components/ArticleCard";
+import Spinner from "@/components/Spinner";
+
+const Articles = () => {
+  const { data: session } = useSession();
+
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const userId = session?.user?.id;
+
+    const fetchArticles = async () => {
+      setIsLoading(true);
+
+      try {
+        const response = await fetch(`/api/users/${userId}/articles`);
+
+        if (response.ok) {
+          const articles = await response.json();
+          setArticles(articles);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (userId) {
+      fetchArticles();
+    }
+  }, []);
+
+  return (
+    <section className="flex flex-col" style={{ height: "calc(100vh - 190px)" }}>
+      {isLoading ? (
+        <Spinner className="self-center my-auto" />
+      ) : (
+        articles.map((article) => (
+          <ArticleCard key={article.id} article={article} />
+        ))
+      )}
+    </section>
+  );
+};
+
+export default Articles;

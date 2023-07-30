@@ -6,7 +6,7 @@ import Article from "@/types/article";
 const ArticleCard = ({ article }: { article: Article }) => {
   const { data: session } = useSession();
 
-  const saveArticle = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const saveArticle = async () => {
     try {
       const response = await fetch(`/api/users/${session?.user?.id}/articles`, {
         method: "POST",
