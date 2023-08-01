@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
-
-import Article from "@/types/article";
+import useArticles from "@/hooks/useArticles";
 import SearchBar from "@/components/SearchBar";
 import ArticleCard from "@/components/ArticleCard";
 
 export default function Home() {
-  const [articles, setArticles] = useState<Article[]>([]);
+  const { articles, setArticles, toggleSavedStatus } = useArticles([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSearch = async (searchTerm: string) => {
@@ -31,7 +30,11 @@ export default function Home() {
     <section className="p-12">
       <SearchBar handleSearch={handleSearch} isLoading={isLoading} />
       {articles.map((article) => (
-        <ArticleCard key={article.id} article={article} />
+        <ArticleCard
+          key={article.id}
+          article={article}
+          toggleSave={(articleId) => toggleSavedStatus(articleId)}
+        />
       ))}
     </section>
   );

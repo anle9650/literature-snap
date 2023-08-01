@@ -4,13 +4,14 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 import Article from "@/types/article";
+import useArticles from "@/hooks/useArticles";
 import ArticleCard from "@/components/ArticleCard";
 import Spinner from "@/components/Spinner";
 
 const Articles = () => {
   const { data: session } = useSession();
 
-  const [articles, setArticles] = useState<Article[]>([]);
+  const { articles, setArticles, toggleSavedStatus } = useArticles([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -39,12 +40,19 @@ const Articles = () => {
   }, []);
 
   return (
-    <section className="flex flex-col" style={{ height: "calc(100vh - 190px)" }}>
+    <section
+      className="flex flex-col"
+      style={{ height: "calc(100vh - 190px)" }}
+    >
       {isLoading ? (
         <Spinner className="self-center my-auto" />
       ) : (
         articles.map((article) => (
-          <ArticleCard key={article.id} article={article} />
+          <ArticleCard
+            key={article.id}
+            article={article}
+            toggleSave={(articleId) => toggleSavedStatus(articleId)}
+          />
         ))
       )}
     </section>
