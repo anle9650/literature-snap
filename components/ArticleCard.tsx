@@ -9,6 +9,7 @@ type Props = {
 
 const ArticleCard = ({ article, toggleSave }: Props) => {
   const { data: session } = useSession();
+  const userId = session?.user?.id;
 
   const saveButtonClass = `border hover:bg-green-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:hover:text-white dark:focus:ring-green-800 dark:hover:bg-green-500 mb-3 ml-auto ${
     article.saved
@@ -18,12 +19,12 @@ const ArticleCard = ({ article, toggleSave }: Props) => {
 
   const handleSaveToggle = async () => {
     try {
-      const response = await fetch(`/api/users/${session?.user?.id}/articles`, {
-        method: "POST",
-        body: JSON.stringify({
-          articleId: article.id,
-        }),
-      });
+      const response = await fetch(
+        `/api/users/${userId}/articles?id=${article.id}`,
+        {
+          method: article.saved ? "DELETE" : "POST",
+        }
+      );
 
       if (response.ok) {
         toggleSave(article.id);
@@ -36,7 +37,7 @@ const ArticleCard = ({ article, toggleSave }: Props) => {
   return (
     <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 mt-3">
       <div className="flex">
-        {session?.user && (
+        {userId && (
           <button
             type="button"
             className={saveButtonClass}

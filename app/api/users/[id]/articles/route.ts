@@ -25,7 +25,8 @@ export const GET = async (req: Request, { params }: { params: Params }) => {
 };
 
 export const POST = async (req: Request, { params }: { params: Params }) => {
-    const { articleId } = await req.json();
+    const { searchParams } = new URL(req.url);
+    const articleId = searchParams.get("id");
 
     try {
         await connectToDB();
@@ -45,5 +46,28 @@ export const POST = async (req: Request, { params }: { params: Params }) => {
     } catch (error) {
         console.log(error);
         return new Response("Failed to save article", { status: 500 });
+    }
+};
+
+export const DELETE = async (req: Request, { params }: { params: Params }) => {
+    const { searchParams } = new URL(req.url);
+    const articleId = searchParams.get("id");
+
+    try {
+        await connectToDB();
+
+        const user = await User.findById(params.id);
+
+        if (!user) {
+            return new Response("User not found", { status: 404 });
+        }
+
+        user.articleIds = user.articleIds.filter((id: string) => id !== articleId)
+        user.save();
+
+        return new Response(JSON.stringify(user), { status: 200 });
+    } catch (error) {
+        console.log(error);
+        return new Response("Failed to unsave article", { status: 500 });
     }
 };

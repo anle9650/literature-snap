@@ -10,13 +10,12 @@ import Spinner from "@/components/Spinner";
 
 const Articles = () => {
   const { data: session } = useSession();
+  const userId = session?.user?.id;
 
   const { articles, setArticles, toggleSavedStatus } = useArticles([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const userId = session?.user?.id;
-
     const fetchArticles = async () => {
       setIsLoading(true);
 
@@ -37,22 +36,15 @@ const Articles = () => {
     if (userId) {
       fetchArticles();
     }
-  }, []);
+  }, [userId]);
 
   return (
-    <section
-      className="flex flex-col"
-      style={{ height: "calc(100vh - 190px)" }}
-    >
+    <section className="flex flex-col" style={{ height: "calc(100vh - 190px)" }}>
       {isLoading ? (
         <Spinner className="self-center my-auto" />
       ) : (
         articles.map((article) => (
-          <ArticleCard
-            key={article.id}
-            article={article}
-            toggleSave={(articleId) => toggleSavedStatus(articleId)}
-          />
+          <ArticleCard key={article.id} article={article} toggleSave={(articleId) => toggleSavedStatus(articleId)} />
         ))
       )}
     </section>
