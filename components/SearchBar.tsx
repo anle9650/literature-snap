@@ -4,12 +4,13 @@ import { useState } from "react";
 import Spinner from "./Spinner";
 
 type Props = {
+  value?: string | null;
   handleSearch: (searchTerm: string) => void;
   isLoading: boolean;
 };
 
-const SearchBar = ({ handleSearch, isLoading }: Props) => {
-  const [searchTerm, setSearchTerm] = useState<string>("");
+const SearchBar = ({ value, handleSearch, isLoading }: Props) => {
+  const [searchTerm, setSearchTerm] = useState<string>(value ?? "");
 
   return (
     <div className="flex items-center">

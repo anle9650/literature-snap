@@ -18,11 +18,13 @@ export const authOptions: NextAuthOptions = {
                 email: session.user?.email,
             });
 
-            if (session.user) {
-                session.user.id = sessionUser._id.toString();
+            return {
+                ...session,
+                user: {
+                    ...session.user,
+                    id: sessionUser._id.toString()
+                }
             }
-
-            return session;
         },
         async signIn({ profile }) {
             try {

@@ -3,7 +3,6 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
-import Article from "@/types/article";
 import useArticles from "@/hooks/useArticles";
 import ArticleCard from "@/components/ArticleCard";
 import Spinner from "@/components/Spinner";

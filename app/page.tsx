@@ -1,13 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useArticles from "@/hooks/useArticles";
 import SearchBar from "@/components/SearchBar";
 import ArticleCard from "@/components/ArticleCard";
+import { useSearchParams } from "next/navigation";
 
 export default function Home() {
+  const searchParams = useSearchParams();
+  const searchTerm = searchParams.get("term");
+
   const { articles, setArticles, toggleSavedStatus } = useArticles([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (searchTerm) {
+      handleSearch(searchTerm);
+    }
+  }, []);
 
   const handleSearch = async (searchTerm: string) => {
     setIsLoading(true);
@@ -18,6 +28,7 @@ export default function Home() {
       if (response.ok) {
         const articles = await response.json();
         setArticles(articles);
+        sessionStorage.setItem('searchTerm', searchTerm);
       }
     } catch (error) {
       console.error(error);
@@ -28,7 +39,11 @@ export default function Home() {
 
   return (
     <section className="p-12">
-      <SearchBar handleSearch={handleSearch} isLoading={isLoading} />
+      <SearchBar
+        value={searchTerm}
+        handleSearch={handleSearch}
+        isLoading={isLoading}
+      />
       {articles.map((article) => (
         <ArticleCard
           key={article.id}

@@ -73,7 +73,7 @@ const ArticlePage = ({ params }: Props) => {
       <ul className="flex items-center p-3">
         <li>
           <Link
-            href="/"
+            href={`/?term=${sessionStorage.getItem('searchTerm')}`}
             className="font-semibold text-gray-900 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:text-white"
           >
             Back to search
