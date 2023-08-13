@@ -6,10 +6,12 @@ import { useEffect, useState } from "react";
 import useArticles from "@/hooks/useArticles";
 import ArticleCard from "@/components/ArticleCard";
 import Spinner from "@/components/Spinner";
+import SessionUser from "@/types/sessionUser";
 
 const Articles = () => {
   const { data: session } = useSession();
-  const userId = session?.user?.id;
+  const user = session?.user as SessionUser;
+  const userId = user?.id;
 
   const { articles, setArticles, toggleSavedStatus } = useArticles([]);
   const [isLoading, setIsLoading] = useState(false);

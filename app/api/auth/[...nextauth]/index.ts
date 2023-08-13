@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth'
 import type { NextAuthOptions } from 'next-auth'
-import GoogleProvider from "next-auth/providers/google";
+import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
 
 import User from "@/models/user";
 import { connectToDB } from "@/utils/database";
@@ -35,10 +35,11 @@ export const authOptions: NextAuthOptions = {
                 });
 
                 if (!userExists) {
+                    const googleProfile = profile as GoogleProfile;
                     await User.create({
                         email: profile?.email,
                         username: profile?.name?.replace(" ", "").toLowerCase(),
-                        image: profile?.picture,
+                        image: googleProfile?.picture,
                     });
                 }
 

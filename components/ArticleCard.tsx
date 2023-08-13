@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import Article from "@/types/article";
+import SessionUser from "@/types/sessionUser";
 
 type Props = {
   article: Article;
@@ -9,7 +10,8 @@ type Props = {
 
 const ArticleCard = ({ article, toggleSave }: Props) => {
   const { data: session } = useSession();
-  const userId = session?.user?.id;
+  const user = session?.user as SessionUser;
+  const userId = user?.id;
 
   const saveButtonClass = `border hover:bg-green-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:hover:text-white dark:focus:ring-green-800 dark:hover:bg-green-500 mb-3 ml-auto ${
     article.saved
